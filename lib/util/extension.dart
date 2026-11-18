@@ -29,8 +29,8 @@ extension EnumParsing on String? {
 extension NumExt on num? {
   String? toParseString() {
     num? value = this;
-    if (value != null  ) {
-      if(value.isInfinite  || value.isNaN){
+    if (value != null) {
+      if (value.isInfinite || value.isNaN) {
         return value.toString();
       }
       if (value.toInt().toDouble() == value) {

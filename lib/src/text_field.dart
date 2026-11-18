@@ -2,7 +2,7 @@ import 'package:auto_binding_field/util/enum.dart';
 import 'package:auto_binding_field/util/extension.dart';
 import 'package:auto_binding_field/util/input_format.dart';
 import 'package:auto_binding_field/util/reg_exp.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 export 'package:auto_binding_field/util/enum.dart';
 
@@ -73,55 +73,56 @@ class AutoBindingTextField extends StatefulWidget {
   final bool autoFocus;
 
   ///This name emphasizes that the widget supports automatic data binding to a data source (the controller).
-  const AutoBindingTextField(
-      {Key? key,
-      required this.value,
-      this.onChanged,
-      this.readOnly = false,
-      this.autoFocus = false,
-      this.decoration,
-      this.isPassword = false,
-      this.enabled = true,
-      this.mandatory = false,
-      this.outSideLabel = false,
-      this.ourSideLabelGap = _ourSideLabelGap,
-      this.focusNode,
-      this.onEditingComplete,
-      this.inputFormatters,
-      this.textInputAction,
-      this.maxLines = 1,
-      this.keyboardType,
-      this.autoValidateMode = AutovalidateMode.disabled,
-      this.onSaved,
-      this.isPrimarySelect = true,
-      this.onFieldSubmitted,
-      this.validator})
-      : super(key: key);
+  const AutoBindingTextField({
+    super.key,
+    required this.value,
+    this.onChanged,
+    this.readOnly = false,
+    this.autoFocus = false,
+    this.decoration,
+    this.isPassword = false,
+    this.enabled = true,
+    this.mandatory = false,
+    this.outSideLabel = false,
+    this.ourSideLabelGap = _ourSideLabelGap,
+    this.focusNode,
+    this.onEditingComplete,
+    this.inputFormatters,
+    this.textInputAction,
+    this.maxLines = 1,
+    this.keyboardType,
+    this.autoValidateMode = AutovalidateMode.disabled,
+    this.onSaved,
+    this.isPrimarySelect = true,
+    this.onFieldSubmitted,
+    this.validator,
+  });
 
   /// if the field is mobile type,use this
-  factory AutoBindingTextField.mobile(
-      {Key? key,
-      String? value,
-      void Function(String value)? onChanged,
-      bool readOnly = false,
-      bool autoFocus = false,
-      InputDecoration? decoration,
-      bool isPassword = false,
-      bool enabled = true,
-      bool mandatory = false,
-      bool outSideLabel = false,
-      double ourSideLabelGap = _ourSideLabelGap,
-      FocusNode? focusNode,
-      void Function()? onEditingComplete,
-      List<TextInputFormatter>? inputFormatters,
-      TextInputAction? textInputAction,
-      int maxLines = 1,
-      TextInputType? keyboardType,
-      AutovalidateMode autoValidateMode = AutovalidateMode.disabled,
-      void Function(String? value)? onSaved,
-      bool isPrimarySelect = true,
-      void Function(String value)? onFieldSubmitted,
-      String? Function(String? value)? validator}) {
+  factory AutoBindingTextField.mobile({
+    Key? key,
+    String? value,
+    void Function(String value)? onChanged,
+    bool readOnly = false,
+    bool autoFocus = false,
+    InputDecoration? decoration,
+    bool isPassword = false,
+    bool enabled = true,
+    bool mandatory = false,
+    bool outSideLabel = false,
+    double ourSideLabelGap = _ourSideLabelGap,
+    FocusNode? focusNode,
+    void Function()? onEditingComplete,
+    List<TextInputFormatter>? inputFormatters,
+    TextInputAction? textInputAction,
+    int maxLines = 1,
+    TextInputType? keyboardType,
+    AutovalidateMode autoValidateMode = AutovalidateMode.disabled,
+    void Function(String? value)? onSaved,
+    bool isPrimarySelect = true,
+    void Function(String value)? onFieldSubmitted,
+    String? Function(String? value)? validator,
+  }) {
     return AutoBindingTextField(
       value: value,
       keyboardType: keyboardType ?? TextInputType.phone,
@@ -132,7 +133,8 @@ class AutoBindingTextField extends StatefulWidget {
       onSaved: onSaved,
       autoValidateMode: autoValidateMode,
       key: key,
-      validator: validator ??
+      validator:
+          validator ??
           (value) {
             if (mandatory == true && (value == null || value == '')) {
               return 'Cant be null';
@@ -158,29 +160,30 @@ class AutoBindingTextField extends StatefulWidget {
   }
 
   /// if the field is email type,use this
-  factory AutoBindingTextField.email(
-      {Key? key,
-      String? value,
-      void Function(String value)? onChanged,
-      bool readOnly = false,
-      bool autoFocus = false,
-      InputDecoration? decoration,
-      bool isPassword = false,
-      bool enabled = true,
-      bool mandatory = false,
-      bool outSideLabel = false,
-      double ourSideLabelGap = _ourSideLabelGap,
-      FocusNode? focusNode,
-      void Function()? onEditingComplete,
-      List<TextInputFormatter>? inputFormatters,
-      TextInputAction? textInputAction,
-      int maxLines = 1,
-      TextInputType? keyboardType,
-      AutovalidateMode autoValidateMode = AutovalidateMode.disabled,
-      void Function(String? value)? onSaved,
-      bool isPrimarySelect = true,
-      void Function(String value)? onFieldSubmitted,
-      String? Function(String? value)? validator}) {
+  factory AutoBindingTextField.email({
+    Key? key,
+    String? value,
+    void Function(String value)? onChanged,
+    bool readOnly = false,
+    bool autoFocus = false,
+    InputDecoration? decoration,
+    bool isPassword = false,
+    bool enabled = true,
+    bool mandatory = false,
+    bool outSideLabel = false,
+    double ourSideLabelGap = _ourSideLabelGap,
+    FocusNode? focusNode,
+    void Function()? onEditingComplete,
+    List<TextInputFormatter>? inputFormatters,
+    TextInputAction? textInputAction,
+    int maxLines = 1,
+    TextInputType? keyboardType,
+    AutovalidateMode autoValidateMode = AutovalidateMode.disabled,
+    void Function(String? value)? onSaved,
+    bool isPrimarySelect = true,
+    void Function(String value)? onFieldSubmitted,
+    String? Function(String? value)? validator,
+  }) {
     return AutoBindingTextField(
       value: value,
       keyboardType: keyboardType ?? TextInputType.emailAddress,
@@ -191,7 +194,8 @@ class AutoBindingTextField extends StatefulWidget {
       onSaved: onSaved,
       autoValidateMode: autoValidateMode,
       key: key,
-      validator: validator ??
+      validator:
+          validator ??
           (value) {
             if (mandatory == true && (value == null || value == '')) {
               return 'Cant be null';
@@ -238,7 +242,9 @@ class _AutoBindingTextFieldState extends State<AutoBindingTextField> {
       focusNode.addListener(() {
         if (focusNode.hasFocus) {
           controller.selection = TextSelection(
-              baseOffset: 0, extentOffset: controller.text.length);
+            baseOffset: 0,
+            extentOffset: controller.text.length,
+          );
         }
       });
     }
@@ -256,77 +262,99 @@ class _AutoBindingTextFieldState extends State<AutoBindingTextField> {
     if (widget.decoration != null) {
       if (widget.outSideLabel) {
         labelStyle = TextStyle(
-          fontSize: widget.decoration?.labelStyle?.fontSize ??
+          fontSize:
+              widget.decoration?.labelStyle?.fontSize ??
               Theme.of(context).inputDecorationTheme.labelStyle?.fontSize,
-          overflow: widget.decoration?.labelStyle?.overflow ??
+          overflow:
+              widget.decoration?.labelStyle?.overflow ??
               Theme.of(context).inputDecorationTheme.labelStyle?.overflow,
-          locale: widget.decoration?.labelStyle?.locale ??
+          locale:
+              widget.decoration?.labelStyle?.locale ??
               Theme.of(context).inputDecorationTheme.labelStyle?.locale,
-          decoration: widget.decoration?.labelStyle?.decoration ??
+          decoration:
+              widget.decoration?.labelStyle?.decoration ??
               Theme.of(context).inputDecorationTheme.labelStyle?.decoration,
-          height: widget.decoration?.labelStyle?.height ??
+          height:
+              widget.decoration?.labelStyle?.height ??
               Theme.of(context).inputDecorationTheme.labelStyle?.height,
-          color: widget.decoration?.labelStyle?.color ??
+          color:
+              widget.decoration?.labelStyle?.color ??
               Theme.of(context).inputDecorationTheme.labelStyle?.color,
-          backgroundColor: widget.decoration?.labelStyle?.backgroundColor ??
+          backgroundColor:
+              widget.decoration?.labelStyle?.backgroundColor ??
               Theme.of(context)
                   .inputDecorationTheme
                   .labelStyle
                   ?.backgroundColor,
-          background: widget.decoration?.labelStyle?.background ??
+          background:
+              widget.decoration?.labelStyle?.background ??
               Theme.of(context).inputDecorationTheme.labelStyle?.background,
-          debugLabel: widget.decoration?.labelStyle?.debugLabel ??
+          debugLabel:
+              widget.decoration?.labelStyle?.debugLabel ??
               Theme.of(context).inputDecorationTheme.labelStyle?.debugLabel,
-          decorationColor: widget.decoration?.labelStyle?.decorationColor ??
+          decorationColor:
+              widget.decoration?.labelStyle?.decorationColor ??
               Theme.of(context)
                   .inputDecorationTheme
                   .labelStyle
                   ?.decorationColor,
-          decorationStyle: widget.decoration?.labelStyle?.decorationStyle ??
+          decorationStyle:
+              widget.decoration?.labelStyle?.decorationStyle ??
               Theme.of(context)
                   .inputDecorationTheme
                   .labelStyle
                   ?.decorationStyle,
           decorationThickness:
               widget.decoration?.labelStyle?.decorationThickness ??
-                  Theme.of(context)
-                      .inputDecorationTheme
-                      .labelStyle
-                      ?.decorationThickness,
-          fontFamily: widget.decoration?.labelStyle?.fontFamily ??
+              Theme.of(context)
+                  .inputDecorationTheme
+                  .labelStyle
+                  ?.decorationThickness,
+          fontFamily:
+              widget.decoration?.labelStyle?.fontFamily ??
               Theme.of(context).inputDecorationTheme.labelStyle?.fontFamily,
           fontFamilyFallback:
               widget.decoration?.labelStyle?.fontFamilyFallback ??
-                  Theme.of(context)
-                      .inputDecorationTheme
-                      .labelStyle
-                      ?.fontFamilyFallback,
-          fontFeatures: widget.decoration?.labelStyle?.fontFeatures ??
+              Theme.of(context)
+                  .inputDecorationTheme
+                  .labelStyle
+                  ?.fontFamilyFallback,
+          fontFeatures:
+              widget.decoration?.labelStyle?.fontFeatures ??
               Theme.of(context).inputDecorationTheme.labelStyle?.fontFeatures,
-          fontStyle: widget.decoration?.labelStyle?.fontStyle ??
+          fontStyle:
+              widget.decoration?.labelStyle?.fontStyle ??
               Theme.of(context).inputDecorationTheme.labelStyle?.fontStyle,
-          fontVariations: widget.decoration?.labelStyle?.fontVariations ??
+          fontVariations:
+              widget.decoration?.labelStyle?.fontVariations ??
               Theme.of(context).inputDecorationTheme.labelStyle?.fontVariations,
-          fontWeight: widget.decoration?.labelStyle?.fontWeight ??
+          fontWeight:
+              widget.decoration?.labelStyle?.fontWeight ??
               Theme.of(context).inputDecorationTheme.labelStyle?.fontWeight,
-          foreground: widget.decoration?.labelStyle?.foreground ??
+          foreground:
+              widget.decoration?.labelStyle?.foreground ??
               Theme.of(context).inputDecorationTheme.labelStyle?.foreground,
-          inherit: widget.decoration?.labelStyle?.inherit ??
+          inherit:
+              widget.decoration?.labelStyle?.inherit ??
               Theme.of(context).inputDecorationTheme.labelStyle?.inherit ??
               true,
           leadingDistribution:
               widget.decoration?.labelStyle?.leadingDistribution ??
-                  Theme.of(context)
-                      .inputDecorationTheme
-                      .labelStyle
-                      ?.leadingDistribution,
-          letterSpacing: widget.decoration?.labelStyle?.letterSpacing ??
+              Theme.of(context)
+                  .inputDecorationTheme
+                  .labelStyle
+                  ?.leadingDistribution,
+          letterSpacing:
+              widget.decoration?.labelStyle?.letterSpacing ??
               Theme.of(context).inputDecorationTheme.labelStyle?.letterSpacing,
-          shadows: widget.decoration?.labelStyle?.shadows ??
+          shadows:
+              widget.decoration?.labelStyle?.shadows ??
               Theme.of(context).inputDecorationTheme.labelStyle?.shadows,
-          textBaseline: widget.decoration?.labelStyle?.textBaseline ??
+          textBaseline:
+              widget.decoration?.labelStyle?.textBaseline ??
               Theme.of(context).inputDecorationTheme.labelStyle?.textBaseline,
-          wordSpacing: widget.decoration?.labelStyle?.wordSpacing ??
+          wordSpacing:
+              widget.decoration?.labelStyle?.wordSpacing ??
               Theme.of(context).inputDecorationTheme.labelStyle?.wordSpacing,
         );
         if (widget.decoration?.labelText != null) {
@@ -351,7 +379,7 @@ class _AutoBindingTextFieldState extends State<AutoBindingTextField> {
               strutStyle: temp.strutStyle,
               textDirection: temp.textDirection,
               textHeightBehavior: temp.textHeightBehavior,
-              textScaleFactor: temp.textScaleFactor,
+              textScaler: temp.textScaler,
               textWidthBasis: temp.textWidthBasis,
             );
           } else {
@@ -448,10 +476,8 @@ class _AutoBindingTextFieldState extends State<AutoBindingTextField> {
             mainAxisSize: MainAxisSize.min,
             children: [
               outSideLabelText,
-              SizedBox(
-                height: widget.ourSideLabelGap,
-              ),
-              textField
+              SizedBox(height: widget.ourSideLabelGap),
+              textField,
             ],
           )
         : textField;
@@ -523,7 +549,7 @@ class AutoBindingNumField extends StatefulWidget {
   final NumberType type;
 
   const AutoBindingNumField({
-    Key? key,
+    super.key,
     required this.value,
     this.onChanged,
     this.readOnly = false,
@@ -545,32 +571,33 @@ class AutoBindingNumField extends StatefulWidget {
     this.onFieldSubmitted,
     this.validator,
     this.ourSideLabelGap = _ourSideLabelGap,
-  }) : super(key: key);
+  });
 
-  factory AutoBindingNumField.decimal(
-      {Key? key,
-      num? value,
-      void Function(num? value)? onChanged,
-      NumberType type = NumberType.decimal,
-      bool readOnly = false,
-      bool autoFocus = false,
-      InputDecoration? decoration,
-      bool isPassword = false,
-      bool enabled = true,
-      bool mandatory = false,
-      bool outSideLabel = false,
-      double ourSideLabelGap = _ourSideLabelGap,
-      FocusNode? focusNode,
-      void Function()? onEditingComplete,
-      List<TextInputFormatter>? inputFormatters,
-      TextInputAction? textInputAction,
-      int maxLines = 1,
-      TextInputType? keyboardType,
-      AutovalidateMode autoValidateMode = AutovalidateMode.disabled,
-      void Function(num? value)? onSaved,
-      bool isPrimarySelect = true,
-      void Function(num? value)? onFieldSubmitted,
-      String? Function(num? value)? validator}) {
+  factory AutoBindingNumField.decimal({
+    Key? key,
+    num? value,
+    void Function(num? value)? onChanged,
+    NumberType type = NumberType.decimal,
+    bool readOnly = false,
+    bool autoFocus = false,
+    InputDecoration? decoration,
+    bool isPassword = false,
+    bool enabled = true,
+    bool mandatory = false,
+    bool outSideLabel = false,
+    double ourSideLabelGap = _ourSideLabelGap,
+    FocusNode? focusNode,
+    void Function()? onEditingComplete,
+    List<TextInputFormatter>? inputFormatters,
+    TextInputAction? textInputAction,
+    int maxLines = 1,
+    TextInputType? keyboardType,
+    AutovalidateMode autoValidateMode = AutovalidateMode.disabled,
+    void Function(num? value)? onSaved,
+    bool isPrimarySelect = true,
+    void Function(num? value)? onFieldSubmitted,
+    String? Function(num? value)? validator,
+  }) {
     return AutoBindingNumField(
       type: type,
       value: value,
@@ -596,30 +623,31 @@ class AutoBindingNumField extends StatefulWidget {
       textInputAction: textInputAction,
     );
   }
-  factory AutoBindingNumField.integer(
-      {Key? key,
-      num? value,
-      void Function(num? value)? onChanged,
-      bool readOnly = false,
-      NumberType type = NumberType.integer,
-      bool autoFocus = false,
-      InputDecoration? decoration,
-      bool isPassword = false,
-      bool enabled = true,
-      bool mandatory = false,
-      bool outSideLabel = false,
-      double ourSideLabelGap = _ourSideLabelGap,
-      FocusNode? focusNode,
-      void Function()? onEditingComplete,
-      List<TextInputFormatter>? inputFormatters,
-      TextInputAction? textInputAction,
-      int maxLines = 1,
-      TextInputType? keyboardType,
-      AutovalidateMode autoValidateMode = AutovalidateMode.disabled,
-      void Function(num? value)? onSaved,
-      bool isPrimarySelect = true,
-      void Function(num? value)? onFieldSubmitted,
-      String? Function(num? value)? validator}) {
+  factory AutoBindingNumField.integer({
+    Key? key,
+    num? value,
+    void Function(num? value)? onChanged,
+    bool readOnly = false,
+    NumberType type = NumberType.integer,
+    bool autoFocus = false,
+    InputDecoration? decoration,
+    bool isPassword = false,
+    bool enabled = true,
+    bool mandatory = false,
+    bool outSideLabel = false,
+    double ourSideLabelGap = _ourSideLabelGap,
+    FocusNode? focusNode,
+    void Function()? onEditingComplete,
+    List<TextInputFormatter>? inputFormatters,
+    TextInputAction? textInputAction,
+    int maxLines = 1,
+    TextInputType? keyboardType,
+    AutovalidateMode autoValidateMode = AutovalidateMode.disabled,
+    void Function(num? value)? onSaved,
+    bool isPrimarySelect = true,
+    void Function(num? value)? onFieldSubmitted,
+    String? Function(num? value)? validator,
+  }) {
     return AutoBindingNumField(
       type: type,
       value: value,
@@ -664,25 +692,29 @@ class _AutoBindingNumFieldState extends State<AutoBindingNumField> {
       focusNode = FocusNode();
     }
     controller.addListener(() {
-      if(controller.text==''){
+      if (controller.text == '') {
         controller.selection = TextSelection(
-            baseOffset: 0, extentOffset: controller.text.length);
+          baseOffset: 0,
+          extentOffset: controller.text.length,
+        );
       }
-      if(controller.selection.baseOffset<0){
-        controller.selection=TextSelection(
-            baseOffset: controller.text.length, extentOffset: controller.text.length);
+      if (controller.selection.baseOffset < 0) {
+        controller.selection = TextSelection(
+          baseOffset: controller.text.length,
+          extentOffset: controller.text.length,
+        );
       }
-
     });
     if (widget.isPrimarySelect) {
       focusNode.addListener(() {
         if (focusNode.hasFocus) {
           controller.selection = TextSelection(
-              baseOffset: 0, extentOffset: controller.text.length);
+            baseOffset: 0,
+            extentOffset: controller.text.length,
+          );
         }
       });
     }
-
   }
 
   @override
@@ -693,95 +725,112 @@ class _AutoBindingNumFieldState extends State<AutoBindingNumField> {
 
   @override
   Widget build(BuildContext context) {
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-
-      if(!focusNode.hasFocus){
-        if (controller.text.toParseDouble()!=widget.value&&
+      if (!focusNode.hasFocus) {
+        if (controller.text.toParseDouble() != widget.value &&
             controller.text != (widget.value?.toParseString() ?? "")) {
-
           controller.text = widget.value?.toString() ?? "";
         }
-
       }
-
     });
 
     late final InputDecoration decoration;
     if (widget.decoration != null) {
       if (widget.outSideLabel) {
         labelStyle = TextStyle(
-          fontSize: widget.decoration?.labelStyle?.fontSize ??
+          fontSize:
+              widget.decoration?.labelStyle?.fontSize ??
               Theme.of(context).inputDecorationTheme.labelStyle?.fontSize,
-          overflow: widget.decoration?.labelStyle?.overflow ??
+          overflow:
+              widget.decoration?.labelStyle?.overflow ??
               Theme.of(context).inputDecorationTheme.labelStyle?.overflow,
-          locale: widget.decoration?.labelStyle?.locale ??
+          locale:
+              widget.decoration?.labelStyle?.locale ??
               Theme.of(context).inputDecorationTheme.labelStyle?.locale,
-          decoration: widget.decoration?.labelStyle?.decoration ??
+          decoration:
+              widget.decoration?.labelStyle?.decoration ??
               Theme.of(context).inputDecorationTheme.labelStyle?.decoration,
-          height: widget.decoration?.labelStyle?.height ??
+          height:
+              widget.decoration?.labelStyle?.height ??
               Theme.of(context).inputDecorationTheme.labelStyle?.height,
-          color: widget.decoration?.labelStyle?.color ??
+          color:
+              widget.decoration?.labelStyle?.color ??
               Theme.of(context).inputDecorationTheme.labelStyle?.color,
-          backgroundColor: widget.decoration?.labelStyle?.backgroundColor ??
+          backgroundColor:
+              widget.decoration?.labelStyle?.backgroundColor ??
               Theme.of(context)
                   .inputDecorationTheme
                   .labelStyle
                   ?.backgroundColor,
-          background: widget.decoration?.labelStyle?.background ??
+          background:
+              widget.decoration?.labelStyle?.background ??
               Theme.of(context).inputDecorationTheme.labelStyle?.background,
-          debugLabel: widget.decoration?.labelStyle?.debugLabel ??
+          debugLabel:
+              widget.decoration?.labelStyle?.debugLabel ??
               Theme.of(context).inputDecorationTheme.labelStyle?.debugLabel,
-          decorationColor: widget.decoration?.labelStyle?.decorationColor ??
+          decorationColor:
+              widget.decoration?.labelStyle?.decorationColor ??
               Theme.of(context)
                   .inputDecorationTheme
                   .labelStyle
                   ?.decorationColor,
-          decorationStyle: widget.decoration?.labelStyle?.decorationStyle ??
+          decorationStyle:
+              widget.decoration?.labelStyle?.decorationStyle ??
               Theme.of(context)
                   .inputDecorationTheme
                   .labelStyle
                   ?.decorationStyle,
           decorationThickness:
               widget.decoration?.labelStyle?.decorationThickness ??
-                  Theme.of(context)
-                      .inputDecorationTheme
-                      .labelStyle
-                      ?.decorationThickness,
-          fontFamily: widget.decoration?.labelStyle?.fontFamily ??
+              Theme.of(context)
+                  .inputDecorationTheme
+                  .labelStyle
+                  ?.decorationThickness,
+          fontFamily:
+              widget.decoration?.labelStyle?.fontFamily ??
               Theme.of(context).inputDecorationTheme.labelStyle?.fontFamily,
           fontFamilyFallback:
               widget.decoration?.labelStyle?.fontFamilyFallback ??
-                  Theme.of(context)
-                      .inputDecorationTheme
-                      .labelStyle
-                      ?.fontFamilyFallback,
-          fontFeatures: widget.decoration?.labelStyle?.fontFeatures ??
+              Theme.of(context)
+                  .inputDecorationTheme
+                  .labelStyle
+                  ?.fontFamilyFallback,
+          fontFeatures:
+              widget.decoration?.labelStyle?.fontFeatures ??
               Theme.of(context).inputDecorationTheme.labelStyle?.fontFeatures,
-          fontStyle: widget.decoration?.labelStyle?.fontStyle ??
+          fontStyle:
+              widget.decoration?.labelStyle?.fontStyle ??
               Theme.of(context).inputDecorationTheme.labelStyle?.fontStyle,
-          fontVariations: widget.decoration?.labelStyle?.fontVariations ??
+          fontVariations:
+              widget.decoration?.labelStyle?.fontVariations ??
               Theme.of(context).inputDecorationTheme.labelStyle?.fontVariations,
-          fontWeight: widget.decoration?.labelStyle?.fontWeight ??
+          fontWeight:
+              widget.decoration?.labelStyle?.fontWeight ??
               Theme.of(context).inputDecorationTheme.labelStyle?.fontWeight,
-          foreground: widget.decoration?.labelStyle?.foreground ??
+          foreground:
+              widget.decoration?.labelStyle?.foreground ??
               Theme.of(context).inputDecorationTheme.labelStyle?.foreground,
-          inherit: widget.decoration?.labelStyle?.inherit ??
+          inherit:
+              widget.decoration?.labelStyle?.inherit ??
               Theme.of(context).inputDecorationTheme.labelStyle?.inherit ??
               true,
           leadingDistribution:
               widget.decoration?.labelStyle?.leadingDistribution ??
-                  Theme.of(context)
-                      .inputDecorationTheme
-                      .labelStyle
-                      ?.leadingDistribution,
-          letterSpacing: widget.decoration?.labelStyle?.letterSpacing ??
+              Theme.of(context)
+                  .inputDecorationTheme
+                  .labelStyle
+                  ?.leadingDistribution,
+          letterSpacing:
+              widget.decoration?.labelStyle?.letterSpacing ??
               Theme.of(context).inputDecorationTheme.labelStyle?.letterSpacing,
-          shadows: widget.decoration?.labelStyle?.shadows ??
+          shadows:
+              widget.decoration?.labelStyle?.shadows ??
               Theme.of(context).inputDecorationTheme.labelStyle?.shadows,
-          textBaseline: widget.decoration?.labelStyle?.textBaseline ??
+          textBaseline:
+              widget.decoration?.labelStyle?.textBaseline ??
               Theme.of(context).inputDecorationTheme.labelStyle?.textBaseline,
-          wordSpacing: widget.decoration?.labelStyle?.wordSpacing ??
+          wordSpacing:
+              widget.decoration?.labelStyle?.wordSpacing ??
               Theme.of(context).inputDecorationTheme.labelStyle?.wordSpacing,
         );
         if (widget.decoration?.labelText != null) {
@@ -806,7 +855,7 @@ class _AutoBindingNumFieldState extends State<AutoBindingNumField> {
               strutStyle: temp.strutStyle,
               textDirection: temp.textDirection,
               textHeightBehavior: temp.textHeightBehavior,
-              textScaleFactor: temp.textScaleFactor,
+              textScaler: temp.textScaler,
               textWidthBasis: temp.textWidthBasis,
             );
           } else {
@@ -908,7 +957,8 @@ class _AutoBindingNumFieldState extends State<AutoBindingNumField> {
         }
         return null;
       },
-      onEditingComplete: widget.onEditingComplete ??
+      onEditingComplete:
+          widget.onEditingComplete ??
           () {
             FocusScope.of(context).nextFocus();
           },
@@ -918,9 +968,7 @@ class _AutoBindingNumFieldState extends State<AutoBindingNumField> {
         }
       },
       textInputAction: widget.textInputAction,
-      keyboardType: const TextInputType.numberWithOptions(
-        decimal: true,
-      ),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       onChanged: (text) {
         if (widget.onChanged != null) {
           widget.onChanged!(text.toParseDouble());
@@ -943,10 +991,8 @@ class _AutoBindingNumFieldState extends State<AutoBindingNumField> {
             mainAxisSize: MainAxisSize.min,
             children: [
               outSideLabelText,
-              SizedBox(
-                height: widget.ourSideLabelGap,
-              ),
-              textField
+              SizedBox(height: widget.ourSideLabelGap),
+              textField,
             ],
           )
         : textField;

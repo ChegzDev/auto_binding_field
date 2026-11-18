@@ -10,6 +10,12 @@ A AutoBindingField package that automatically updates input field state based on
 
 
 
+## Requirements
+
+Version 0.1.0 and later is built on [`material_ui`](https://pub.dev/packages/material_ui), the standalone Material library that replaces `package:flutter/material.dart`, and requires **Flutter 3.47+** / **Dart 3.13+**. On older Flutter versions, use `auto_binding_field: ^0.0.7`.
+
+If your app still imports `package:flutter/material.dart`, migrate it with `dart fix --apply --code=migrate_design_widgets`, or wrap your app with `MaterialUiCompatibilityBridge` (see the [material_ui README](https://pub.dev/packages/material_ui)).
+
 ## Usage
 
 Simply import the package and use the `AutoBindingField` widget in your Flutter app. Here is an example:
@@ -21,7 +27,7 @@ Simply import the package and use the `AutoBindingField` widget in your Flutter 
        type: NumberType.onlyPositiveInt,
        onChanged: (value) {
           setState(() {
-            age=value as int?;
+            age = value?.toInt(); // onChanged always reports a num (double)
           });
        },
        decoration: const InputDecoration(labelText: 'Age'),

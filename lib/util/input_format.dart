@@ -6,7 +6,9 @@ import 'package:flutter/services.dart';
 class MobileInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     if (newValue.text.isNotEmpty &&
         newValue.text.length != 1 &&
         newValue.text

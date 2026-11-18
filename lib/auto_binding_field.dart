@@ -1,3 +1,3 @@
-library auto_binding_field;
+library;
 
 export 'src/text_field.dart';

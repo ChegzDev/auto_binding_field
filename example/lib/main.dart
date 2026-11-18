@@ -1,5 +1,5 @@
 import 'package:auto_binding_field/auto_binding_field.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,9 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'AutoBindingField',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const MyHomePage(title: 'AutoBindingField'),
     );
   }
@@ -32,25 +30,25 @@ class _MyHomePageState extends State<MyHomePage> {
   String mobile = '';
   String email = '';
   int? age = 18;
-  double tax=12;
+  double tax = 12;
   double? price;
-  double? get priceWithTax=>price==null?null: (price??0)+(price??0)*(tax)/100;
-  set priceWithTax(double? value){
-    if(value==null){
-      price=null;
-    }else{
-      price= value*100/(100+tax);
+  double? get priceWithTax =>
+      price == null ? null : (price ?? 0) + (price ?? 0) * (tax) / 100;
+  set priceWithTax(double? value) {
+    if (value == null) {
+      price = null;
+    } else {
+      price = value * 100 / (100 + tax);
     }
   }
+
   double? salary;
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Center(
         child: Form(
           key: formKey,
@@ -75,7 +73,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 AutoBindingTextField.mobile(
                   value: mobile,
                   onChanged: (value) {
-
                     setState(() {
                       mobile = value;
                     });
@@ -102,11 +99,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   decoration: const InputDecoration(labelText: 'Age'),
                 ),
                 AutoBindingNumField(
-                  value: 1/(salary??0),
+                  value: 1 / (salary ?? 0),
                   // type: NumberType.onlyPositiveInt,
                   onChanged: (value) {
                     setState(() {
-                      salary = 1/ (value?.toDouble()??0);
+                      salary = 1 / (value?.toDouble() ?? 0);
                     });
                   },
                   decoration: const InputDecoration(labelText: 'Age'),
@@ -140,7 +137,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       priceWithTax = value as double?;
                     });
                   },
-                  decoration: const InputDecoration(labelText: 'Price with Tax'),
+                  decoration: const InputDecoration(
+                    labelText: 'Price with Tax',
+                  ),
                 ),
                 AutoBindingNumField(
                   value: tax,
@@ -161,50 +160,42 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           RichText(
-              text: TextSpan(
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  children: [
+            text: TextSpan(
+              style: Theme.of(context).textTheme.bodyLarge,
+              children: [
                 TextSpan(text: 'Name: $name\n'),
                 TextSpan(text: 'Mobile: $mobile\n'),
                 TextSpan(text: 'Email: $email\n'),
                 TextSpan(text: 'age: $age\n'),
                 TextSpan(text: 'salary: $salary\n'),
-              ])),
+              ],
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                  onPressed: () {
-                    name = '';
-                    mobile = '';
-                    email = '';
-                    age = null;
-                    salary = null;
-                    setState(() {});
-                  },
-                  child: const Text('clear form')),
-              const SizedBox(
-                width: 5,
+                onPressed: () {
+                  name = '';
+                  mobile = '';
+                  email = '';
+                  age = null;
+                  salary = null;
+                  setState(() {});
+                },
+                child: const Text('clear form'),
               ),
+              const SizedBox(width: 5),
               ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {}
-                  },
-                  child: const Text('validate')),
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {}
+                },
+                child: const Text('validate'),
+              ),
             ],
           ),
         ],
       ),
     );
-  }
-  Future hi()async{
-
-  }
-  his()async{
-    await hi().then((value) {
-      if (!context.mounted) return;
-      context.size;
-    });
-
   }
 }
