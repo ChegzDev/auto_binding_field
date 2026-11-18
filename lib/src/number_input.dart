@@ -5,29 +5,30 @@ import '../util/enum.dart';
 extension NumberTypeInfo on NumberType {
   /// Whether values of this type may be negative.
   bool get allowsNegative => switch (this) {
-    NumberType.onlyPositiveInt || NumberType.onlyPositiveDecimal => false,
-    _ => true,
-  };
+        NumberType.onlyPositiveInt || NumberType.onlyPositiveDecimal => false,
+        _ => true,
+      };
 
   /// Whether values of this type must be negative.
   bool get onlyNegative => switch (this) {
-    NumberType.onlyNegativeInt || NumberType.onlyNegativeDecimal => true,
-    _ => false,
-  };
+        NumberType.onlyNegativeInt || NumberType.onlyNegativeDecimal => true,
+        _ => false,
+      };
 
   /// Whether values of this type may have decimals.
   bool get allowsDecimal => switch (this) {
-    NumberType.decimal ||
-    NumberType.onlyPositiveDecimal ||
-    NumberType.onlyNegativeDecimal => true,
-    _ => false,
-  };
+        NumberType.decimal ||
+        NumberType.onlyPositiveDecimal ||
+        NumberType.onlyNegativeDecimal =>
+          true,
+        _ => false,
+      };
 
   /// A keyboard that offers the characters this type needs.
   TextInputType get keyboardType => TextInputType.numberWithOptions(
-    signed: allowsNegative,
-    decimal: allowsDecimal,
-  );
+        signed: allowsNegative,
+        decimal: allowsDecimal,
+      );
 
   /// Matches every valid *partial* input, e.g. `-`, `1.` or an empty string.
   RegExp get partialPattern {
@@ -119,9 +120,8 @@ class NumberInputFormatter extends TextInputFormatter {
     if (type.onlyNegative && text.isNotEmpty && !text.startsWith('-')) {
       final prefixed = '-$text';
       if (pattern.hasMatch(prefixed)) {
-        final offset = selection.isValid
-            ? selection.extentOffset + 1
-            : prefixed.length;
+        final offset =
+            selection.isValid ? selection.extentOffset + 1 : prefixed.length;
         return TextEditingValue(
           text: prefixed,
           selection: TextSelection.collapsed(

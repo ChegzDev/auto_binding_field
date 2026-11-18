@@ -1,6 +1,6 @@
-## 0.2.0
+## 0.0.8
 
-For apps on `material_ui` (Flutter 3.47+). Apps on `package:flutter/material.dart` should use 0.0.8, which has the same fixes.
+For apps on `package:flutter/material.dart` (Flutter 3.16+). Same fixes as 0.2.0, which is the version for apps on `material_ui`.
 
 * Fixed a crash ("TextEditingController was used after being disposed") when a `focusNode` passed to the field is reused after the field is removed. Focus listeners are now removed, and a focus node created by the field is disposed.
 * Values changed while the field has focus are no longer lost: the field syncs when the value changes and when it loses focus, instead of on every build.
@@ -14,7 +14,7 @@ For apps on `material_ui` (Flutter 3.47+). Apps on `package:flutter/material.dar
 * `mandatory` works on every field and constructor; `.email`/`.mobile` accept an empty optional value. New `mandatoryErrorText` and `invalidErrorText` parameters.
 * Email validation accepts hyphenated domains and rejects malformed addresses; mobile validation accepts international numbers (7–15 digits) and formatted input such as `+1 (415) 555-2671`, which `MobileInputFormatter` now allows too.
 * `Expression.webUrl` and `Expression.dateDMY` are anchored and fixed.
-* `outSideLabel`: rich-text labels no longer crash; all decoration properties (hint, helper and error widgets, visual density, ...) are kept; `labelStyle` applies to label widgets.
+* `outSideLabel`: rich-text labels no longer crash; decoration properties such as the `error` widget, borders and icons are kept (the newer `hint`/`helper` widget and `visualDensity` fields need Flutter 3.47+ and are only kept in 0.2.0); `labelStyle` applies to label widgets.
 * README: corrected badges and the compatibility guidance (`MaterialUiCompatibilityBridge` does not make this package work in `flutter/material` apps).
 * Added package tests and a corrected example (bound price/tax fields, working "Clear form").
 

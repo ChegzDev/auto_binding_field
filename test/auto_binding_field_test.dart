@@ -2,13 +2,14 @@ import 'package:auto_binding_field/auto_binding_field.dart';
 import 'package:auto_binding_field/util/input_format.dart';
 import 'package:auto_binding_field/util/reg_exp.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_ui/material_ui.dart';
+// ignore: deprecated_member_use
+import 'package:flutter/material.dart';
 
 Widget host(Widget child) => MaterialApp(
-  home: Scaffold(
-    body: Form(child: Column(children: [child])),
-  ),
-);
+      home: Scaffold(
+        body: Form(child: Column(children: [child])),
+      ),
+    );
 
 TextField innerField(WidgetTester tester) =>
     tester.widget<TextField>(find.byType(TextField).first);
@@ -200,9 +201,9 @@ void main() {
     }
 
     TextEditingValue v(String text) => TextEditingValue(
-      text: text,
-      selection: TextSelection.collapsed(offset: text.length),
-    );
+          text: text,
+          selection: TextSelection.collapsed(offset: text.length),
+        );
 
     testWidgets('an invalid edit is rejected without truncating', (
       tester,
@@ -580,29 +581,23 @@ void main() {
       expect(innerField(tester).decoration!.label, isNull);
     });
 
-    testWidgets('hint, helper and error widgets are kept', (tester) async {
-      await tester.pumpWidget(
-        host(
-          const AutoBindingNumField(
-            value: null,
-            outSideLabel: true,
-            decoration: InputDecoration(
-              labelText: 'Price',
-              hint: Text('hint-w'),
-              helper: Text('helper-w'),
-              error: Text('error-w'),
-              visualDensity: VisualDensity.compact,
-            ),
-          ),
+    testWidgets('error widget and other decoration fields are kept',
+        (tester) async {
+      await tester.pumpWidget(host(const AutoBindingNumField(
+        value: null,
+        outSideLabel: true,
+        decoration: InputDecoration(
+          labelText: 'Price',
+          hintText: 'hint-t',
+          error: Text('error-w'),
+          suffixText: '%',
         ),
-      );
+      )));
       expect(find.text('Price'), findsOneWidget);
-      expect(find.text('helper-w'), findsNothing); // replaced by error
       expect(find.text('error-w'), findsOneWidget);
       final d = innerField(tester).decoration!;
-      expect(d.hint, isNotNull);
-      expect(d.helper, isNotNull);
-      expect(d.visualDensity, VisualDensity.compact);
+      expect(d.hintText, 'hint-t');
+      expect(d.suffixText, '%');
       expect(d.labelText, isNull);
     });
 
@@ -619,8 +614,8 @@ void main() {
           ),
         ),
       );
-      final style = DefaultTextStyle.of(tester.element(find.text('Styled')))
-          .style;
+      final style =
+          DefaultTextStyle.of(tester.element(find.text('Styled'))).style;
       expect(style.color, const Color(0xFFFF0000));
     });
   });

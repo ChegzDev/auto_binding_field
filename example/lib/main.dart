@@ -1,5 +1,6 @@
 import 'package:auto_binding_field/auto_binding_field.dart';
-import 'package:material_ui/material_ui.dart';
+// ignore: deprecated_member_use
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());

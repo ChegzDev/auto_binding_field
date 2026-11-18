@@ -1,4 +1,5 @@
-import 'package:material_ui/material_ui.dart';
+// ignore: deprecated_member_use
+import 'package:flutter/material.dart';
 
 /// Returns [d] without its label, for fields that show the label outside.
 ///
@@ -55,15 +56,6 @@ InputDecoration decorationWithoutLabel(InputDecoration d) {
     semanticCounterText: d.semanticCounterText,
     alignLabelWithHint: d.alignLabelWithHint,
     constraints: d.constraints,
-    // material_ui-only:begin (not available in older Flutter versions)
-    labelTextDirection: d.labelTextDirection,
-    helper: d.helper,
-    hint: d.hint,
-    maintainHintSize: d.maintainHintSize,
-    maintainLabelSize: d.maintainLabelSize,
-    visualDensity: d.visualDensity,
-    supportingTextPadding: d.supportingTextPadding,
-    // material_ui-only:end
   );
 }
 

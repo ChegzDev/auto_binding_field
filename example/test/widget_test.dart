@@ -1,7 +1,8 @@
 import 'package:auto_binding_field/auto_binding_field.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:example/main.dart';
-import 'package:material_ui/material_ui.dart';
+// ignore: deprecated_member_use
+import 'package:flutter/material.dart';
 
 void main() {
   testWidgets('Example app renders binding fields', (tester) async {
@@ -58,11 +59,11 @@ void main() {
     await tester.pumpWidget(const MyApp());
 
     Finder field(String label) => find.descendant(
-      of: find
-          .ancestor(of: find.text(label), matching: find.byType(Column))
-          .first,
-      matching: find.byType(TextField),
-    );
+          of: find
+              .ancestor(of: find.text(label), matching: find.byType(Column))
+              .first,
+          matching: find.byType(TextField),
+        );
     String text(String label) =>
         tester.widget<TextField>(field(label)).controller!.text;
 

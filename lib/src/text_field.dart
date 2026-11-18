@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:material_ui/material_ui.dart';
+// ignore: deprecated_member_use
+import 'package:flutter/material.dart';
 
 import '../util/enum.dart';
 import '../util/input_format.dart';
@@ -155,8 +156,7 @@ class AutoBindingTextField extends StatefulWidget {
       maxLines: maxLines,
       onSaved: onSaved,
       autoValidateMode: autoValidateMode,
-      validator:
-          validator ??
+      validator: validator ??
           (value) {
             if (value == null || value.trim().isEmpty) return null;
             return isValidPhone(value) ? null : invalidErrorText;
@@ -215,8 +215,7 @@ class AutoBindingTextField extends StatefulWidget {
       maxLines: maxLines,
       onSaved: onSaved,
       autoValidateMode: autoValidateMode,
-      validator:
-          validator ??
+      validator: validator ??
           (value) {
             if (value == null || value.trim().isEmpty) return null;
             return isValidEmail(value) ? null : invalidErrorText;

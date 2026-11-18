@@ -1,15 +1,14 @@
 name: auto_binding_field
 description: This package that automatically updates input field state based on bound variable changes, and vice versa.
-version: 0.2.0
+version: 0.0.8
 homepage: https://github.com/ChegzDev/auto_binding_field
 repository: https://github.com/ChegzDev/auto_binding_field
 environment:
-  sdk: ^3.13.0
-  flutter: ">=3.47.0"
+  sdk: ">=3.2.0 <4.0.0"
+  flutter: ">=3.16.0"
 dependencies:
   flutter:
     sdk: flutter
-  material_ui: ^1.11.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
