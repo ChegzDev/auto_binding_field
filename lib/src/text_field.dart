@@ -1,78 +1,95 @@
-import 'package:auto_binding_field/util/enum.dart';
-import 'package:auto_binding_field/util/extension.dart';
-import 'package:auto_binding_field/util/input_format.dart';
-import 'package:auto_binding_field/util/reg_exp.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
-export 'package:auto_binding_field/util/enum.dart';
+import 'package:material_ui/material_ui.dart';
+
+import '../util/enum.dart';
+import '../util/input_format.dart';
+import '../util/reg_exp.dart';
+import 'binding.dart';
+import 'decoration.dart';
+import 'number_input.dart';
+
+export '../util/enum.dart';
 
 const double _ourSideLabelGap = 8;
+const String _defaultMandatoryErrorText = 'This field is required';
 
+/// A text field bound to a `String?` variable.
+///
+/// Pass your variable as [value] and update it in [onChanged]. When the
+/// variable changes elsewhere (for example a "clear" button), the field
+/// shows the new value. While the user is typing, changes that only echo
+/// earlier input are ignored so no keystrokes are lost, and an active IME
+/// composition is never interrupted.
 class AutoBindingTextField extends StatefulWidget {
-  /// - use your variable here for binding
+  /// The bound value. Use your variable here.
   final String? value;
 
-  /// - you should update your 'value' from here by using parameter 'value'
+  /// Called with the new text on every edit. Update your variable here.
   final void Function(String value)? onChanged;
 
-  /// - this function same as onSaved on TextFormField
+  /// Same as [TextFormField.onSaved].
   final void Function(String? value)? onSaved;
 
-  /// - this function same as onEditingComplete on TextFormField
+  /// Same as [TextFormField.onEditingComplete].
   final void Function()? onEditingComplete;
 
-  /// - this function same as onFieldSubmitted on TextFormField
+  /// Same as [TextFormField.onFieldSubmitted].
   final void Function(String value)? onFieldSubmitted;
 
-  /// - this function same as focusNode on TextFormField
+  /// Same as [TextFormField.focusNode]. When null, the field creates and
+  /// disposes its own node.
   final FocusNode? focusNode;
 
-  /// - this function same as inputFormatters on TextFormField
+  /// Same as [TextFormField.inputFormatters].
   final List<TextInputFormatter>? inputFormatters;
 
-  /// - this function same as textInputAction on TextFormField
+  /// Same as [TextFormField.textInputAction].
   final TextInputAction? textInputAction;
 
-  /// - if on first select field then select all text if isPrimary is true
+  /// Selects the whole text when the field gains focus, so typing replaces
+  /// the current value.
   final bool isPrimarySelect;
 
-  /// - this function same as validator on TextFormField
+  /// Same as [TextFormField.validator]. Runs after the [mandatory] check.
   final String? Function(String? value)? validator;
 
-  /// - this function same as maxLines on TextFormField
+  /// Same as [TextFormField.maxLines].
   final int maxLines;
 
-  /// - this function same as keyboardType on TextFormField
+  /// Same as [TextFormField.keyboardType].
   final TextInputType? keyboardType;
 
-  /// - this function same as autoValidateMode on TextFormField
+  /// Same as [TextFormField.autovalidateMode].
   final AutovalidateMode? autoValidateMode;
 
-  /// - if this field is password type.make this as true
+  /// Hides the text, for passwords.
   final bool isPassword;
 
-  /// - this function same as enabled on TextFormField
+  /// Same as [TextFormField.enabled].
   final bool enabled;
 
-  /// - this function same as decoration on TextFormField
+  /// Same as [TextFormField.decoration].
   final InputDecoration? decoration;
 
-  /// - if outside label is true then the label will be shown on the top of the field
+  /// Shows the decoration's label above the field instead of inside it.
   final bool outSideLabel;
 
-  /// - if outside label is true,and the gap of the label is ourSideLabelGap
+  /// Space between the outside label and the field.
   final double ourSideLabelGap;
 
-  /// - this form is mandatory use this.
+  /// When true, an empty value fails validation with [mandatoryErrorText].
   final bool mandatory;
 
-  /// - this function same as readOnly on TextFormField
+  /// Error shown when a [mandatory] field is empty.
+  final String mandatoryErrorText;
+
+  /// Same as [TextFormField.readOnly].
   final bool readOnly;
 
-  /// - this function same as autoFocus on TextFormField
+  /// Same as [TextFormField.autofocus].
   final bool autoFocus;
 
-  ///This name emphasizes that the widget supports automatic data binding to a data source (the controller).
+  /// Creates a text field bound to [value].
   const AutoBindingTextField({
     super.key,
     required this.value,
@@ -83,6 +100,7 @@ class AutoBindingTextField extends StatefulWidget {
     this.isPassword = false,
     this.enabled = true,
     this.mandatory = false,
+    this.mandatoryErrorText = _defaultMandatoryErrorText,
     this.outSideLabel = false,
     this.ourSideLabelGap = _ourSideLabelGap,
     this.focusNode,
@@ -98,7 +116,9 @@ class AutoBindingTextField extends StatefulWidget {
     this.validator,
   });
 
-  /// if the field is mobile type,use this
+  /// A phone number field: phone keyboard, [MobileInputFormatter] and a
+  /// validator that accepts 7 to 15 digits with an optional leading `+`.
+  /// An empty value is valid unless [mandatory] is true.
   factory AutoBindingTextField.mobile({
     Key? key,
     String? value,
@@ -109,6 +129,8 @@ class AutoBindingTextField extends StatefulWidget {
     bool isPassword = false,
     bool enabled = true,
     bool mandatory = false,
+    String mandatoryErrorText = _defaultMandatoryErrorText,
+    String invalidErrorText = 'Invalid Mobile Number',
     bool outSideLabel = false,
     double ourSideLabelGap = _ourSideLabelGap,
     FocusNode? focusNode,
@@ -124,6 +146,7 @@ class AutoBindingTextField extends StatefulWidget {
     String? Function(String? value)? validator,
   }) {
     return AutoBindingTextField(
+      key: key,
       value: value,
       keyboardType: keyboardType ?? TextInputType.phone,
       inputFormatters: inputFormatters ?? [MobileInputFormatter()],
@@ -132,17 +155,11 @@ class AutoBindingTextField extends StatefulWidget {
       maxLines: maxLines,
       onSaved: onSaved,
       autoValidateMode: autoValidateMode,
-      key: key,
       validator:
           validator ??
           (value) {
-            if (mandatory == true && (value == null || value == '')) {
-              return 'Cant be null';
-            }
-            if (!RegExp(Expression.mobile).hasMatch(value.toString())) {
-              return 'Invalid Mobile Number';
-            }
-            return null;
+            if (value == null || value.trim().isEmpty) return null;
+            return isValidPhone(value) ? null : invalidErrorText;
           },
       readOnly: readOnly,
       focusNode: focusNode,
@@ -153,13 +170,15 @@ class AutoBindingTextField extends StatefulWidget {
       isPassword: isPassword,
       isPrimarySelect: isPrimarySelect,
       mandatory: mandatory,
+      mandatoryErrorText: mandatoryErrorText,
       onEditingComplete: onEditingComplete,
       ourSideLabelGap: ourSideLabelGap,
       textInputAction: textInputAction,
     );
   }
 
-  /// if the field is email type,use this
+  /// An email field: email keyboard and an email validator. An empty value
+  /// is valid unless [mandatory] is true.
   factory AutoBindingTextField.email({
     Key? key,
     String? value,
@@ -170,6 +189,8 @@ class AutoBindingTextField extends StatefulWidget {
     bool isPassword = false,
     bool enabled = true,
     bool mandatory = false,
+    String mandatoryErrorText = _defaultMandatoryErrorText,
+    String invalidErrorText = 'Invalid email id',
     bool outSideLabel = false,
     double ourSideLabelGap = _ourSideLabelGap,
     FocusNode? focusNode,
@@ -185,6 +206,7 @@ class AutoBindingTextField extends StatefulWidget {
     String? Function(String? value)? validator,
   }) {
     return AutoBindingTextField(
+      key: key,
       value: value,
       keyboardType: keyboardType ?? TextInputType.emailAddress,
       inputFormatters: inputFormatters,
@@ -193,17 +215,11 @@ class AutoBindingTextField extends StatefulWidget {
       maxLines: maxLines,
       onSaved: onSaved,
       autoValidateMode: autoValidateMode,
-      key: key,
       validator:
           validator ??
           (value) {
-            if (mandatory == true && (value == null || value == '')) {
-              return 'Cant be null';
-            }
-            if (!RegExp(Expression.email).hasMatch(value.toString())) {
-              return 'Invalid email id';
-            }
-            return null;
+            if (value == null || value.trim().isEmpty) return null;
+            return isValidEmail(value) ? null : invalidErrorText;
           },
       readOnly: readOnly,
       focusNode: focusNode,
@@ -214,6 +230,7 @@ class AutoBindingTextField extends StatefulWidget {
       isPassword: isPassword,
       isPrimarySelect: isPrimarySelect,
       mandatory: mandatory,
+      mandatoryErrorText: mandatoryErrorText,
       onEditingComplete: onEditingComplete,
       ourSideLabelGap: ourSideLabelGap,
       textInputAction: textInputAction,
@@ -224,330 +241,159 @@ class AutoBindingTextField extends StatefulWidget {
   State<AutoBindingTextField> createState() => _AutoBindingTextFieldState();
 }
 
-class _AutoBindingTextFieldState extends State<AutoBindingTextField> {
-  late final FocusNode focusNode;
-  final TextEditingController controller = TextEditingController();
-  Widget outSideLabelText = const SizedBox();
-  TextStyle? labelStyle;
+class _AutoBindingTextFieldState extends State<AutoBindingTextField>
+    with BindingFieldMixin<AutoBindingTextField> {
+  @override
+  FocusNode? get widgetFocusNode => widget.focusNode;
+
+  @override
+  bool get isPrimarySelect => widget.isPrimarySelect;
+
+  @override
+  String textForValue() => widget.value ?? '';
+
+  @override
+  bool textMatchesValue(String text) => text == (widget.value ?? '');
+
   @override
   void initState() {
     super.initState();
-    controller.text = widget.value ?? "";
-    if (widget.focusNode != null) {
-      focusNode = widget.focusNode!;
-    } else {
-      focusNode = FocusNode();
-    }
-    if (widget.isPrimarySelect) {
-      focusNode.addListener(() {
-        if (focusNode.hasFocus) {
-          controller.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: controller.text.length,
-          );
-        }
-      });
-    }
+    initBinding();
+  }
+
+  @override
+  void didUpdateWidget(AutoBindingTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    updateFocusNode(oldWidget.focusNode);
+    if (oldWidget.value != widget.value) scheduleSync();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    disposeBinding();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    late final InputDecoration decoration;
-    if (widget.decoration != null) {
-      if (widget.outSideLabel) {
-        labelStyle = TextStyle(
-          fontSize:
-              widget.decoration?.labelStyle?.fontSize ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.fontSize,
-          overflow:
-              widget.decoration?.labelStyle?.overflow ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.overflow,
-          locale:
-              widget.decoration?.labelStyle?.locale ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.locale,
-          decoration:
-              widget.decoration?.labelStyle?.decoration ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.decoration,
-          height:
-              widget.decoration?.labelStyle?.height ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.height,
-          color:
-              widget.decoration?.labelStyle?.color ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.color,
-          backgroundColor:
-              widget.decoration?.labelStyle?.backgroundColor ??
-              Theme.of(context)
-                  .inputDecorationTheme
-                  .labelStyle
-                  ?.backgroundColor,
-          background:
-              widget.decoration?.labelStyle?.background ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.background,
-          debugLabel:
-              widget.decoration?.labelStyle?.debugLabel ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.debugLabel,
-          decorationColor:
-              widget.decoration?.labelStyle?.decorationColor ??
-              Theme.of(context)
-                  .inputDecorationTheme
-                  .labelStyle
-                  ?.decorationColor,
-          decorationStyle:
-              widget.decoration?.labelStyle?.decorationStyle ??
-              Theme.of(context)
-                  .inputDecorationTheme
-                  .labelStyle
-                  ?.decorationStyle,
-          decorationThickness:
-              widget.decoration?.labelStyle?.decorationThickness ??
-              Theme.of(context)
-                  .inputDecorationTheme
-                  .labelStyle
-                  ?.decorationThickness,
-          fontFamily:
-              widget.decoration?.labelStyle?.fontFamily ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.fontFamily,
-          fontFamilyFallback:
-              widget.decoration?.labelStyle?.fontFamilyFallback ??
-              Theme.of(context)
-                  .inputDecorationTheme
-                  .labelStyle
-                  ?.fontFamilyFallback,
-          fontFeatures:
-              widget.decoration?.labelStyle?.fontFeatures ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.fontFeatures,
-          fontStyle:
-              widget.decoration?.labelStyle?.fontStyle ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.fontStyle,
-          fontVariations:
-              widget.decoration?.labelStyle?.fontVariations ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.fontVariations,
-          fontWeight:
-              widget.decoration?.labelStyle?.fontWeight ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.fontWeight,
-          foreground:
-              widget.decoration?.labelStyle?.foreground ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.foreground,
-          inherit:
-              widget.decoration?.labelStyle?.inherit ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.inherit ??
-              true,
-          leadingDistribution:
-              widget.decoration?.labelStyle?.leadingDistribution ??
-              Theme.of(context)
-                  .inputDecorationTheme
-                  .labelStyle
-                  ?.leadingDistribution,
-          letterSpacing:
-              widget.decoration?.labelStyle?.letterSpacing ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.letterSpacing,
-          shadows:
-              widget.decoration?.labelStyle?.shadows ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.shadows,
-          textBaseline:
-              widget.decoration?.labelStyle?.textBaseline ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.textBaseline,
-          wordSpacing:
-              widget.decoration?.labelStyle?.wordSpacing ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.wordSpacing,
-        );
-        if (widget.decoration?.labelText != null) {
-          outSideLabelText = Text(
-            widget.decoration!.labelText!,
-            style: labelStyle,
-          );
-        } else if (widget.decoration?.label != null) {
-          if (widget.decoration!.label! is Text) {
-            final temp = (widget.decoration!.label! as Text);
-            outSideLabelText = Text(
-              temp.data!,
-              style: temp.style,
-              textAlign: temp.textAlign,
-              locale: temp.locale,
-              maxLines: temp.maxLines,
-              overflow: temp.overflow,
-              key: null,
-              selectionColor: temp.selectionColor,
-              semanticsLabel: temp.semanticsLabel,
-              softWrap: temp.softWrap,
-              strutStyle: temp.strutStyle,
-              textDirection: temp.textDirection,
-              textHeightBehavior: temp.textHeightBehavior,
-              textScaler: temp.textScaler,
-              textWidthBasis: temp.textWidthBasis,
-            );
-          } else {
-            outSideLabelText = widget.decoration!.label!;
-          }
-        } else {
-          outSideLabelText = const SizedBox();
-        }
-        decoration = InputDecoration(
-          labelStyle: null,
-          label: null,
-          labelText: null,
-          contentPadding: widget.decoration!.contentPadding,
-          border: widget.decoration!.border,
-          suffixIcon: widget.decoration!.suffixIcon,
-          suffix: widget.decoration!.suffix,
-          hintText: widget.decoration!.hintText,
-          icon: widget.decoration!.icon,
-          floatingLabelBehavior: widget.decoration!.floatingLabelBehavior,
-          iconColor: widget.decoration!.iconColor,
-          alignLabelWithHint: widget.decoration!.alignLabelWithHint,
-          constraints: widget.decoration!.constraints,
-          counter: widget.decoration!.counter,
-          counterStyle: widget.decoration!.counterStyle,
-          counterText: widget.decoration!.counterText,
-          disabledBorder: widget.decoration!.disabledBorder,
-          enabled: widget.decoration!.enabled,
-          enabledBorder: widget.decoration!.enabledBorder,
-          errorBorder: widget.decoration!.errorBorder,
-          errorMaxLines: widget.decoration!.errorMaxLines,
-          errorStyle: widget.decoration!.errorStyle,
-          errorText: widget.decoration!.errorText,
-          fillColor: widget.decoration!.fillColor,
-          filled: widget.decoration!.filled,
-          floatingLabelAlignment: widget.decoration!.floatingLabelAlignment,
-          floatingLabelStyle: widget.decoration!.floatingLabelStyle,
-          focusColor: widget.decoration!.focusColor,
-          focusedBorder: widget.decoration!.focusedBorder,
-          focusedErrorBorder: widget.decoration!.focusedErrorBorder,
-          helperMaxLines: widget.decoration!.helperMaxLines,
-          helperStyle: widget.decoration!.helperStyle,
-          helperText: widget.decoration!.helperText,
-          hintMaxLines: widget.decoration!.hintMaxLines,
-          hintStyle: widget.decoration!.hintStyle,
-          hintTextDirection: widget.decoration!.hintTextDirection,
-          hoverColor: widget.decoration!.hoverColor,
-          isCollapsed: widget.decoration!.isCollapsed,
-          isDense: widget.decoration!.isDense,
-          prefix: widget.decoration!.prefix,
-          prefixIcon: widget.decoration!.prefixIcon,
-          prefixIconColor: widget.decoration!.prefixIconColor,
-          prefixIconConstraints: widget.decoration!.prefixIconConstraints,
-          prefixStyle: widget.decoration!.prefixStyle,
-          prefixText: widget.decoration!.prefixText,
-          semanticCounterText: widget.decoration!.semanticCounterText,
-          suffixIconColor: widget.decoration!.suffixIconColor,
-          suffixIconConstraints: widget.decoration!.suffixIconConstraints,
-          suffixStyle: widget.decoration!.suffixStyle,
-          suffixText: widget.decoration!.suffixText,
-        );
-      } else {
-        decoration = widget.decoration!;
-      }
-    } else {
-      decoration = const InputDecoration();
-    }
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (controller.text != widget.value) {
-        controller.text = widget.value?.toString() ?? "";
-      }
-    });
-    Widget textField = TextFormField(
+    final field = TextFormField(
       autofocus: widget.autoFocus,
       enabled: widget.enabled,
       readOnly: widget.readOnly,
       controller: controller,
       focusNode: focusNode,
-      validator: widget.validator,
+      validator: (text) {
+        if (widget.mandatory && (text == null || text.trim().isEmpty)) {
+          return widget.mandatoryErrorText;
+        }
+        return widget.validator?.call(text);
+      },
       onEditingComplete: widget.onEditingComplete,
       onFieldSubmitted: widget.onFieldSubmitted,
       textInputAction: widget.textInputAction,
       keyboardType: widget.keyboardType,
-      onChanged: widget.onChanged,
+      onChanged: (text) {
+        recordEmitted(text);
+        widget.onChanged?.call(text);
+      },
       onSaved: widget.onSaved,
-      maxLines: widget.maxLines,
+      maxLines: widget.isPassword ? 1 : widget.maxLines,
       autovalidateMode: widget.autoValidateMode,
       inputFormatters: widget.inputFormatters,
       obscureText: widget.isPassword,
-      decoration: decoration,
+      decoration: _decoration(widget.decoration, widget.outSideLabel),
     );
-    return widget.outSideLabel
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              outSideLabelText,
-              SizedBox(height: widget.ourSideLabelGap),
-              textField,
-            ],
-          )
-        : textField;
+    return _withOutsideLabel(
+      context,
+      field,
+      widget.decoration,
+      widget.outSideLabel,
+      widget.ourSideLabelGap,
+    );
   }
 }
 
+/// A number field bound to a `num?` variable.
+///
+/// Only input valid for [type] is accepted, a comma is accepted as decimal
+/// separator, and the keyboard matches [type]. [onChanged], [onSaved],
+/// [onFieldSubmitted] and [validator] receive an `int` for integer types and
+/// a `double` for decimal types (or null when the field is empty).
 class AutoBindingNumField extends StatefulWidget {
-  /// - use your number variable here for binding
+  /// The bound value. Use your number variable here.
   final num? value;
 
-  /// - you should update your 'value' from here by using parameter 'value'
+  /// Called with the parsed number on every edit (null when empty or
+  /// incomplete, e.g. just `-`). Update your variable here.
   final void Function(num? value)? onChanged;
 
-  /// - this function same as onSaved on TextFormField
+  /// Same as [TextFormField.onSaved], with the parsed number.
   final void Function(num? value)? onSaved;
 
-  /// - this function same as onEditingComplete on TextFormField
+  /// Same as [TextFormField.onEditingComplete].
   final void Function()? onEditingComplete;
 
-  /// - this function same as onFieldSubmitted on TextFormField
+  /// Same as [TextFormField.onFieldSubmitted], with the parsed number.
   final void Function(num? value)? onFieldSubmitted;
 
-  /// - this function same as focusNode on TextFormField
+  /// Same as [TextFormField.focusNode]. When null, the field creates and
+  /// disposes its own node.
   final FocusNode? focusNode;
 
-  /// - this function same as inputFormatters on TextFormField
+  /// Replaces the default number filter for [type].
   final List<TextInputFormatter>? inputFormatters;
 
-  /// - this function same as textInputAction on TextFormField
+  /// Same as [TextFormField.textInputAction].
   final TextInputAction? textInputAction;
 
-  /// - if on first select field then select all text if isPrimary is true
+  /// Selects the whole text when the field gains focus, so typing replaces
+  /// the current value.
   final bool isPrimarySelect;
 
-  /// - this function same as validator on TextFormField
+  /// Validates the parsed number. Runs after the [mandatory] check.
   final String? Function(num? value)? validator;
 
-  /// - this function same as maxLines on TextFormField
+  /// Same as [TextFormField.maxLines].
   final int maxLines;
 
-  /// - this function same as keyboardType on TextFormField
+  /// Overrides the keyboard. Defaults to a number keyboard that offers a
+  /// minus sign and decimal point when [type] needs them.
   final TextInputType? keyboardType;
 
-  /// - this function same as autoValidateMode on TextFormField
+  /// Same as [TextFormField.autovalidateMode].
   final AutovalidateMode? autoValidateMode;
 
-  /// - this function same as enabled on TextFormField
+  /// Same as [TextFormField.enabled].
   final bool enabled;
 
-  /// - this function same as decoration on TextFormField
+  /// Same as [TextFormField.decoration].
   final InputDecoration? decoration;
 
-  /// - if outside label is true then the label will be shown on the top of the field
+  /// Shows the decoration's label above the field instead of inside it.
   final bool outSideLabel;
 
-  /// - if outside label is true,and the gap of the label is ourSideLabelGap
+  /// Space between the outside label and the field.
   final double ourSideLabelGap;
 
-  /// - this form is mandatory use this.
+  /// When true, an empty value fails validation with [mandatoryErrorText].
   final bool mandatory;
 
-  /// - this function same as readOnly on TextFormField
+  /// Error shown when a [mandatory] field is empty.
+  final String mandatoryErrorText;
+
+  /// Same as [TextFormField.readOnly].
   final bool readOnly;
 
-  /// - this function same as autoFocus on TextFormField
+  /// Same as [TextFormField.autofocus].
   final bool autoFocus;
 
-  /// - select your Number type, the default type is NumberType.decimal
+  /// Hides the input (e.g. for a PIN).
+  final bool isPassword;
+
+  /// The kind of number accepted. Defaults to [NumberType.decimal].
   final NumberType type;
 
+  /// Creates a number field bound to [value].
   const AutoBindingNumField({
     super.key,
     required this.value,
@@ -558,6 +404,7 @@ class AutoBindingNumField extends StatefulWidget {
     this.decoration,
     this.enabled = true,
     this.mandatory = false,
+    this.mandatoryErrorText = _defaultMandatoryErrorText,
     this.outSideLabel = false,
     this.focusNode,
     this.onEditingComplete,
@@ -571,8 +418,10 @@ class AutoBindingNumField extends StatefulWidget {
     this.onFieldSubmitted,
     this.validator,
     this.ourSideLabelGap = _ourSideLabelGap,
+    this.isPassword = false,
   });
 
+  /// A decimal number field ([NumberType.decimal] unless [type] is given).
   factory AutoBindingNumField.decimal({
     Key? key,
     num? value,
@@ -584,6 +433,7 @@ class AutoBindingNumField extends StatefulWidget {
     bool isPassword = false,
     bool enabled = true,
     bool mandatory = false,
+    String mandatoryErrorText = _defaultMandatoryErrorText,
     bool outSideLabel = false,
     double ourSideLabelGap = _ourSideLabelGap,
     FocusNode? focusNode,
@@ -599,6 +449,7 @@ class AutoBindingNumField extends StatefulWidget {
     String? Function(num? value)? validator,
   }) {
     return AutoBindingNumField(
+      key: key,
       type: type,
       value: value,
       keyboardType: keyboardType,
@@ -608,7 +459,6 @@ class AutoBindingNumField extends StatefulWidget {
       maxLines: maxLines,
       onSaved: onSaved,
       autoValidateMode: autoValidateMode,
-      key: key,
       validator: validator,
       readOnly: readOnly,
       focusNode: focusNode,
@@ -616,13 +466,17 @@ class AutoBindingNumField extends StatefulWidget {
       enabled: enabled,
       onFieldSubmitted: onFieldSubmitted,
       autoFocus: autoFocus,
+      isPassword: isPassword,
       isPrimarySelect: isPrimarySelect,
       mandatory: mandatory,
+      mandatoryErrorText: mandatoryErrorText,
       onEditingComplete: onEditingComplete,
       ourSideLabelGap: ourSideLabelGap,
       textInputAction: textInputAction,
     );
   }
+
+  /// An integer field ([NumberType.integer] unless [type] is given).
   factory AutoBindingNumField.integer({
     Key? key,
     num? value,
@@ -634,6 +488,7 @@ class AutoBindingNumField extends StatefulWidget {
     bool isPassword = false,
     bool enabled = true,
     bool mandatory = false,
+    String mandatoryErrorText = _defaultMandatoryErrorText,
     bool outSideLabel = false,
     double ourSideLabelGap = _ourSideLabelGap,
     FocusNode? focusNode,
@@ -649,6 +504,7 @@ class AutoBindingNumField extends StatefulWidget {
     String? Function(num? value)? validator,
   }) {
     return AutoBindingNumField(
+      key: key,
       type: type,
       value: value,
       keyboardType: keyboardType,
@@ -658,7 +514,6 @@ class AutoBindingNumField extends StatefulWidget {
       maxLines: maxLines,
       onSaved: onSaved,
       autoValidateMode: autoValidateMode,
-      key: key,
       validator: validator,
       readOnly: readOnly,
       focusNode: focusNode,
@@ -666,340 +521,130 @@ class AutoBindingNumField extends StatefulWidget {
       enabled: enabled,
       onFieldSubmitted: onFieldSubmitted,
       autoFocus: autoFocus,
+      isPassword: isPassword,
       isPrimarySelect: isPrimarySelect,
       mandatory: mandatory,
+      mandatoryErrorText: mandatoryErrorText,
       onEditingComplete: onEditingComplete,
       ourSideLabelGap: ourSideLabelGap,
       textInputAction: textInputAction,
     );
   }
+
   @override
   State<AutoBindingNumField> createState() => _AutoBindingNumFieldState();
 }
 
-class _AutoBindingNumFieldState extends State<AutoBindingNumField> {
-  late final FocusNode focusNode;
-  final TextEditingController controller = TextEditingController();
-  Widget outSideLabelText = const SizedBox();
-  TextStyle? labelStyle;
+class _AutoBindingNumFieldState extends State<AutoBindingNumField>
+    with BindingFieldMixin<AutoBindingNumField> {
+  late NumberInputFormatter _formatter = NumberInputFormatter(widget.type);
+
+  @override
+  FocusNode? get widgetFocusNode => widget.focusNode;
+
+  @override
+  bool get isPrimarySelect => widget.isPrimarySelect;
+
+  @override
+  String textForValue() => widget.type.format(widget.value);
+
+  @override
+  bool textMatchesValue(String text) {
+    final parsed = widget.type.parse(text);
+    final value = widget.value;
+    if (value == null || !value.isFinite) return parsed == null;
+    return parsed != null && parsed == value;
+  }
+
   @override
   void initState() {
     super.initState();
-    controller.text = widget.value?.toParseString() ?? "";
-    if (widget.focusNode != null) {
-      focusNode = widget.focusNode!;
-    } else {
-      focusNode = FocusNode();
+    initBinding();
+  }
+
+  @override
+  void didUpdateWidget(AutoBindingNumField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    updateFocusNode(oldWidget.focusNode);
+    if (oldWidget.type != widget.type) {
+      _formatter = NumberInputFormatter(widget.type);
     }
-    controller.addListener(() {
-      if (controller.text == '') {
-        controller.selection = TextSelection(
-          baseOffset: 0,
-          extentOffset: controller.text.length,
-        );
-      }
-      if (controller.selection.baseOffset < 0) {
-        controller.selection = TextSelection(
-          baseOffset: controller.text.length,
-          extentOffset: controller.text.length,
-        );
-      }
-    });
-    if (widget.isPrimarySelect) {
-      focusNode.addListener(() {
-        if (focusNode.hasFocus) {
-          controller.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: controller.text.length,
-          );
-        }
-      });
+    if (oldWidget.value != widget.value || oldWidget.type != widget.type) {
+      scheduleSync();
     }
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    disposeBinding();
     super.dispose();
   }
 
+  num? _parse(String? text) => widget.type.parse(text ?? '');
+
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!focusNode.hasFocus) {
-        if (controller.text.toParseDouble() != widget.value &&
-            controller.text != (widget.value?.toParseString() ?? "")) {
-          controller.text = widget.value?.toString() ?? "";
-        }
-      }
-    });
-
-    late final InputDecoration decoration;
-    if (widget.decoration != null) {
-      if (widget.outSideLabel) {
-        labelStyle = TextStyle(
-          fontSize:
-              widget.decoration?.labelStyle?.fontSize ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.fontSize,
-          overflow:
-              widget.decoration?.labelStyle?.overflow ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.overflow,
-          locale:
-              widget.decoration?.labelStyle?.locale ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.locale,
-          decoration:
-              widget.decoration?.labelStyle?.decoration ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.decoration,
-          height:
-              widget.decoration?.labelStyle?.height ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.height,
-          color:
-              widget.decoration?.labelStyle?.color ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.color,
-          backgroundColor:
-              widget.decoration?.labelStyle?.backgroundColor ??
-              Theme.of(context)
-                  .inputDecorationTheme
-                  .labelStyle
-                  ?.backgroundColor,
-          background:
-              widget.decoration?.labelStyle?.background ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.background,
-          debugLabel:
-              widget.decoration?.labelStyle?.debugLabel ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.debugLabel,
-          decorationColor:
-              widget.decoration?.labelStyle?.decorationColor ??
-              Theme.of(context)
-                  .inputDecorationTheme
-                  .labelStyle
-                  ?.decorationColor,
-          decorationStyle:
-              widget.decoration?.labelStyle?.decorationStyle ??
-              Theme.of(context)
-                  .inputDecorationTheme
-                  .labelStyle
-                  ?.decorationStyle,
-          decorationThickness:
-              widget.decoration?.labelStyle?.decorationThickness ??
-              Theme.of(context)
-                  .inputDecorationTheme
-                  .labelStyle
-                  ?.decorationThickness,
-          fontFamily:
-              widget.decoration?.labelStyle?.fontFamily ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.fontFamily,
-          fontFamilyFallback:
-              widget.decoration?.labelStyle?.fontFamilyFallback ??
-              Theme.of(context)
-                  .inputDecorationTheme
-                  .labelStyle
-                  ?.fontFamilyFallback,
-          fontFeatures:
-              widget.decoration?.labelStyle?.fontFeatures ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.fontFeatures,
-          fontStyle:
-              widget.decoration?.labelStyle?.fontStyle ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.fontStyle,
-          fontVariations:
-              widget.decoration?.labelStyle?.fontVariations ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.fontVariations,
-          fontWeight:
-              widget.decoration?.labelStyle?.fontWeight ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.fontWeight,
-          foreground:
-              widget.decoration?.labelStyle?.foreground ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.foreground,
-          inherit:
-              widget.decoration?.labelStyle?.inherit ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.inherit ??
-              true,
-          leadingDistribution:
-              widget.decoration?.labelStyle?.leadingDistribution ??
-              Theme.of(context)
-                  .inputDecorationTheme
-                  .labelStyle
-                  ?.leadingDistribution,
-          letterSpacing:
-              widget.decoration?.labelStyle?.letterSpacing ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.letterSpacing,
-          shadows:
-              widget.decoration?.labelStyle?.shadows ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.shadows,
-          textBaseline:
-              widget.decoration?.labelStyle?.textBaseline ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.textBaseline,
-          wordSpacing:
-              widget.decoration?.labelStyle?.wordSpacing ??
-              Theme.of(context).inputDecorationTheme.labelStyle?.wordSpacing,
-        );
-        if (widget.decoration?.labelText != null) {
-          outSideLabelText = Text(
-            widget.decoration!.labelText!,
-            style: labelStyle,
-          );
-        } else if (widget.decoration?.label != null) {
-          if (widget.decoration!.label! is Text) {
-            final temp = (widget.decoration!.label! as Text);
-            outSideLabelText = Text(
-              temp.data!,
-              style: temp.style,
-              textAlign: temp.textAlign,
-              locale: temp.locale,
-              maxLines: temp.maxLines,
-              overflow: temp.overflow,
-              key: null,
-              selectionColor: temp.selectionColor,
-              semanticsLabel: temp.semanticsLabel,
-              softWrap: temp.softWrap,
-              strutStyle: temp.strutStyle,
-              textDirection: temp.textDirection,
-              textHeightBehavior: temp.textHeightBehavior,
-              textScaler: temp.textScaler,
-              textWidthBasis: temp.textWidthBasis,
-            );
-          } else {
-            outSideLabelText = widget.decoration!.label!;
-          }
-        } else {
-          outSideLabelText = const SizedBox();
-        }
-
-        decoration = InputDecoration(
-          labelStyle: null,
-          label: null,
-          labelText: null,
-          contentPadding: widget.decoration!.contentPadding,
-          border: widget.decoration!.border,
-          suffixIcon: widget.decoration!.suffixIcon,
-          suffix: widget.decoration!.suffix,
-          hintText: widget.decoration!.hintText,
-          icon: widget.decoration!.icon,
-          floatingLabelBehavior: widget.decoration!.floatingLabelBehavior,
-          iconColor: widget.decoration!.iconColor,
-          alignLabelWithHint: widget.decoration!.alignLabelWithHint,
-          constraints: widget.decoration!.constraints,
-          counter: widget.decoration!.counter,
-          counterStyle: widget.decoration!.counterStyle,
-          counterText: widget.decoration!.counterText,
-          disabledBorder: widget.decoration!.disabledBorder,
-          enabled: widget.decoration!.enabled,
-          enabledBorder: widget.decoration!.enabledBorder,
-          errorBorder: widget.decoration!.errorBorder,
-          errorMaxLines: widget.decoration!.errorMaxLines,
-          errorStyle: widget.decoration!.errorStyle,
-          errorText: widget.decoration!.errorText,
-          fillColor: widget.decoration!.fillColor,
-          filled: widget.decoration!.filled,
-          floatingLabelAlignment: widget.decoration!.floatingLabelAlignment,
-          floatingLabelStyle: widget.decoration!.floatingLabelStyle,
-          focusColor: widget.decoration!.focusColor,
-          focusedBorder: widget.decoration!.focusedBorder,
-          focusedErrorBorder: widget.decoration!.focusedErrorBorder,
-          helperMaxLines: widget.decoration!.helperMaxLines,
-          helperStyle: widget.decoration!.helperStyle,
-          helperText: widget.decoration!.helperText,
-          hintMaxLines: widget.decoration!.hintMaxLines,
-          hintStyle: widget.decoration!.hintStyle,
-          hintTextDirection: widget.decoration!.hintTextDirection,
-          hoverColor: widget.decoration!.hoverColor,
-          isCollapsed: widget.decoration!.isCollapsed,
-          isDense: widget.decoration!.isDense,
-          prefix: widget.decoration!.prefix,
-          prefixIcon: widget.decoration!.prefixIcon,
-          prefixIconColor: widget.decoration!.prefixIconColor,
-          prefixIconConstraints: widget.decoration!.prefixIconConstraints,
-          prefixStyle: widget.decoration!.prefixStyle,
-          prefixText: widget.decoration!.prefixText,
-          semanticCounterText: widget.decoration!.semanticCounterText,
-          suffixIconColor: widget.decoration!.suffixIconColor,
-          suffixIconConstraints: widget.decoration!.suffixIconConstraints,
-          suffixStyle: widget.decoration!.suffixStyle,
-          suffixText: widget.decoration!.suffixText,
-        );
-      } else {
-        decoration = widget.decoration!;
-      }
-    } else {
-      decoration = const InputDecoration();
-    }
-
-    late final RegExp exp;
-    switch (widget.type) {
-      case NumberType.integer:
-        exp = RegExp(r'^-?\d*');
-        break;
-      case NumberType.decimal:
-        exp = RegExp(r'^-?\d*\.?\d*');
-        break;
-      case NumberType.onlyPositiveInt:
-        exp = RegExp(r'^\d*');
-        break;
-      case NumberType.onlyNegativeInt:
-        exp = RegExp(r'^-\d*');
-        break;
-      case NumberType.onlyPositiveDecimal:
-        exp = RegExp(r'^\d*\.?\d*');
-        break;
-      case NumberType.onlyNegativeDecimal:
-        exp = RegExp(r'^-\d*\.?\d*');
-        break;
-    }
-
-    Widget textField = TextFormField(
+    final field = TextFormField(
+      autofocus: widget.autoFocus,
       enabled: widget.enabled,
       readOnly: widget.readOnly,
       controller: controller,
       focusNode: focusNode,
-      validator: (value) {
-        if (widget.validator != null) {
-          return widget.validator!(value.toParseDouble());
+      validator: (text) {
+        if (widget.mandatory && _parse(text) == null) {
+          return widget.mandatoryErrorText;
         }
-        return null;
+        return widget.validator?.call(_parse(text));
       },
-      onEditingComplete:
-          widget.onEditingComplete ??
-          () {
-            FocusScope.of(context).nextFocus();
-          },
-      onFieldSubmitted: (text) {
-        if (widget.onFieldSubmitted != null) {
-          widget.onFieldSubmitted!(text.toParseDouble());
-        }
-      },
+      onEditingComplete: widget.onEditingComplete,
+      onFieldSubmitted: widget.onFieldSubmitted == null
+          ? null
+          : (text) => widget.onFieldSubmitted!(_parse(text)),
       textInputAction: widget.textInputAction,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      keyboardType: widget.keyboardType ?? widget.type.keyboardType,
       onChanged: (text) {
-        if (widget.onChanged != null) {
-          widget.onChanged!(text.toParseDouble());
-        }
+        recordEmitted(text);
+        widget.onChanged?.call(_parse(text));
       },
-      onSaved: (text) {
-        if (widget.onSaved != null) {
-          widget.onSaved!(text.toParseDouble());
-        }
-      },
-      maxLines: widget.maxLines,
+      onSaved: widget.onSaved == null
+          ? null
+          : (text) => widget.onSaved!(_parse(text)),
+      maxLines: widget.isPassword ? 1 : widget.maxLines,
       autovalidateMode: widget.autoValidateMode,
-      inputFormatters:
-          widget.inputFormatters ?? [FilteringTextInputFormatter.allow(exp)],
-      decoration: decoration,
+      inputFormatters: widget.inputFormatters ?? [_formatter],
+      obscureText: widget.isPassword,
+      decoration: _decoration(widget.decoration, widget.outSideLabel),
     );
-    return widget.outSideLabel
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              outSideLabelText,
-              SizedBox(height: widget.ourSideLabelGap),
-              textField,
-            ],
-          )
-        : textField;
+    return _withOutsideLabel(
+      context,
+      field,
+      widget.decoration,
+      widget.outSideLabel,
+      widget.ourSideLabelGap,
+    );
   }
+}
 
-  // @override
-  // void didUpdateWidget(AutoBindingNumField oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  // }
+InputDecoration _decoration(InputDecoration? d, bool outSideLabel) {
+  if (d == null) return const InputDecoration();
+  return outSideLabel ? decorationWithoutLabel(d) : d;
+}
+
+Widget _withOutsideLabel(
+  BuildContext context,
+  Widget field,
+  InputDecoration? decoration,
+  bool outSideLabel,
+  double gap,
+) {
+  if (!outSideLabel) return field;
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      outsideLabel(context, decoration) ?? const SizedBox(),
+      SizedBox(height: gap),
+      field,
+    ],
+  );
 }

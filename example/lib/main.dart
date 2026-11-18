@@ -30,171 +30,125 @@ class _MyHomePageState extends State<MyHomePage> {
   String mobile = '';
   String email = '';
   int? age = 18;
+  double? salary;
   double tax = 12;
   double? price;
-  double? get priceWithTax =>
-      price == null ? null : (price ?? 0) + (price ?? 0) * (tax) / 100;
-  set priceWithTax(double? value) {
-    if (value == null) {
-      price = null;
-    } else {
-      price = value * 100 / (100 + tax);
-    }
-  }
 
-  double? salary;
+  /// A derived value: editing it updates [price].
+  double? get priceWithTax => price == null ? null : price! * (100 + tax) / 100;
+  set priceWithTax(double? value) =>
+      price = value == null ? null : value * 100 / (100 + tax);
 
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
-      body: Center(
-        child: Form(
-          key: formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Personal Info',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                AutoBindingTextField(
-                  value: name,
-                  onChanged: (value) {
-                    setState(() {
-                      name = value;
-                    });
-                  },
-                  decoration: const InputDecoration(labelText: 'Name'),
-                ),
-                AutoBindingTextField.mobile(
-                  value: mobile,
-                  onChanged: (value) {
-                    setState(() {
-                      mobile = value;
-                    });
-                  },
-                  decoration: const InputDecoration(labelText: 'Mobile'),
-                ),
-                /*AutoBindingTextField.email(
-                  value: email,
-                  onChanged: (value) {
-                    setState(() {
-                      email = value;
-                    });
-                  },
-                  decoration: const InputDecoration(labelText: 'Email'),
-                ),*/
-                AutoBindingNumField(
-                  value: age,
-                  // type: NumberType.onlyPositiveInt,
-                  onChanged: (value) {
-                    setState(() {
-                      age = value?.toInt();
-                    });
-                  },
-                  decoration: const InputDecoration(labelText: 'Age'),
-                ),
-                AutoBindingNumField(
-                  value: 1 / (salary ?? 0),
-                  // type: NumberType.onlyPositiveInt,
-                  onChanged: (value) {
-                    setState(() {
-                      salary = 1 / (value?.toDouble() ?? 0);
-                    });
-                  },
-                  decoration: const InputDecoration(labelText: 'Age'),
-                ),
-                AutoBindingNumField(
-                  value: salary,
-                  type: NumberType.onlyPositiveDecimal,
-                  onChanged: (value) {
-                    setState(() {
-                      salary = value as double?;
-                    });
-                  },
-                  decoration: const InputDecoration(labelText: 'Salary'),
-                ),
-
-                AutoBindingNumField(
-                  value: price,
-                  type: NumberType.onlyPositiveDecimal,
-                  onChanged: (value) {
-                    setState(() {
-                      price = value as double?;
-                    });
-                  },
-                  decoration: const InputDecoration(labelText: 'Price'),
-                ),
-                AutoBindingNumField(
-                  value: priceWithTax,
-                  type: NumberType.onlyPositiveDecimal,
-                  onChanged: (value) {
-                    setState(() {
-                      priceWithTax = value as double?;
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Price with Tax',
-                  ),
-                ),
-                AutoBindingNumField(
-                  value: tax,
-                  type: NumberType.onlyPositiveDecimal,
-                  onChanged: (value) {
-                    setState(() {
-                      priceWithTax = value as double?;
-                    });
-                  },
-                  decoration: const InputDecoration(labelText: 'Salary'),
-                ),
-              ],
+      body: Form(
+        key: formKey,
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: <Widget>[
+            Text(
+              'Personal Info',
+              style: Theme.of(context).textTheme.titleLarge,
             ),
-          ),
+            AutoBindingTextField(
+              value: name,
+              mandatory: true,
+              onChanged: (value) => setState(() => name = value),
+              decoration: const InputDecoration(labelText: 'Name'),
+            ),
+            AutoBindingTextField.mobile(
+              value: mobile,
+              onChanged: (value) => setState(() => mobile = value),
+              decoration: const InputDecoration(labelText: 'Mobile (optional)'),
+            ),
+            AutoBindingTextField.email(
+              value: email,
+              onChanged: (value) => setState(() => email = value),
+              decoration: const InputDecoration(labelText: 'Email (optional)'),
+            ),
+            AutoBindingNumField(
+              value: age,
+              type: NumberType.onlyPositiveInt,
+              // Integer types report an int.
+              onChanged: (value) => setState(() => age = value as int?),
+              decoration: const InputDecoration(labelText: 'Age'),
+            ),
+            AutoBindingNumField(
+              value: salary,
+              type: NumberType.onlyPositiveDecimal,
+              // Decimal types report a double.
+              onChanged: (value) => setState(() => salary = value as double?),
+              decoration: const InputDecoration(labelText: 'Salary'),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Price (fields bound to each other)',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            AutoBindingNumField(
+              value: price,
+              type: NumberType.onlyPositiveDecimal,
+              outSideLabel: true,
+              onChanged: (value) => setState(() => price = value as double?),
+              decoration: const InputDecoration(labelText: 'Price'),
+            ),
+            AutoBindingNumField(
+              value: tax,
+              type: NumberType.onlyPositiveDecimal,
+              outSideLabel: true,
+              onChanged: (value) =>
+                  setState(() => tax = (value as double?) ?? 0),
+              decoration: const InputDecoration(
+                labelText: 'Tax',
+                suffixText: '%',
+              ),
+            ),
+            AutoBindingNumField(
+              value: priceWithTax,
+              type: NumberType.onlyPositiveDecimal,
+              outSideLabel: true,
+              onChanged: (value) =>
+                  setState(() => priceWithTax = value as double?),
+              decoration: const InputDecoration(labelText: 'Price with tax'),
+            ),
+          ],
         ),
       ),
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          RichText(
-            text: TextSpan(
-              style: Theme.of(context).textTheme.bodyLarge,
+      bottomNavigationBar: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Name: $name, Mobile: $mobile, Email: $email\n'
+              'Age: $age, Salary: $salary, Price: $price, Tax: $tax%',
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextSpan(text: 'Name: $name\n'),
-                TextSpan(text: 'Mobile: $mobile\n'),
-                TextSpan(text: 'Email: $email\n'),
-                TextSpan(text: 'age: $age\n'),
-                TextSpan(text: 'salary: $salary\n'),
+                ElevatedButton(
+                  onPressed: () => setState(() {
+                    name = '';
+                    mobile = '';
+                    email = '';
+                    age = null;
+                    salary = null;
+                    price = null;
+                  }),
+                  child: const Text('Clear form'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () => formKey.currentState!.validate(),
+                  child: const Text('Validate'),
+                ),
               ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  name = '';
-                  mobile = '';
-                  email = '';
-                  age = null;
-                  salary = null;
-                  setState(() {});
-                },
-                child: const Text('clear form'),
-              ),
-              const SizedBox(width: 5),
-              ElevatedButton(
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {}
-                },
-                child: const Text('validate'),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
